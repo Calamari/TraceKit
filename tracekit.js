@@ -105,8 +105,10 @@ TraceKit.report = (function reportModuleWrapper() {
      * Add a crash handler.
      * @param {Function} handler
      */
-    function subscribe(handler) {
-        installGlobalHandler();
+    function subscribe(handler, prohibitGlobal) {
+        if (!prohibitGlobal) {
+            installGlobalHandler();
+        }
         handlers.push(handler);
     }
 
@@ -235,6 +237,7 @@ TraceKit.report = (function reportModuleWrapper() {
         throw ex; // re-throw to propagate to the top level (and cause window.onerror)
     }
 
+    report.traceKitWindowOnError = traceKitWindowOnError;
     report.subscribe = subscribe;
     report.unsubscribe = unsubscribe;
     return report;
